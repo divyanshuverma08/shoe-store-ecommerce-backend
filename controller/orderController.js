@@ -126,3 +126,21 @@ module.exports.getOrdersByUser = tryCatch(async (req,res) => {
     .send({ success: true, message: "Orders", data: response });
     
 });
+
+module.exports.orderCheckout = tryCatch(async (req, res) => {
+    const id = req.params.orderId;
+
+    if(!id){
+        throw new BaseError("Order Id provided in url", httpStatusCodes.badRequest);
+    }
+  
+    let response = await orderService.orderCheckout(id);
+  
+    return res
+      .status(httpStatusCodes.ok)
+      .send({
+        success: true,
+        message: "Payment Inititated",
+        data: response,
+      });
+  });

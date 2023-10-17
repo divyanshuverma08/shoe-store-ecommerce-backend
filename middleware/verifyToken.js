@@ -3,6 +3,7 @@ const TokenExpiredError = jwt.TokenExpiredError;
 const JsonWebTokenError = jwt.JsonWebTokenError;
 const BaseError = require("../config/BaseError");
 const httpStatusCodes = require("../config/http");
+const environment = require("../utils/environment");
 
 const verifyToken = (req,res,next) => {
     try {
@@ -14,7 +15,7 @@ const verifyToken = (req,res,next) => {
         if(!token){
             throw new BaseError("Token not provided",httpStatusCodes.unauthorized)
         }
-        decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        decodedToken = jwt.verify(token, environment.JWT_SECRET);
         req.user = decodedToken;
         next();
       } catch(err) {

@@ -1,6 +1,7 @@
 const express = require("express");
 const { createToken } = require("../../../utils/jwt");
 const passport = require("passport");
+const environment = require("../../../utils/environment");
 const router = express.Router();
 
 router.get(
@@ -19,11 +20,11 @@ router.get(
   (req, res) => {
     if (req.user.status === 400) {
       return res.redirect(
-        "https://kicks-ecommerce-store.vercel.app?google=false"
+        `${environment.CLIENT_URL}?google=false`
       );
     } else if (req.user.status === 500) {
       return res.redirect(
-        "https://kicks-ecommerce-store.vercel.app?auth=false"
+        `${environment.CLIENT_URL}?auth=false`
       );
     }
     const payload = {
@@ -34,7 +35,7 @@ router.get(
     var string = encodeURIComponent(`${token}`);
     // res.cookie("auth", JSON.stringify(token),{domain: "kicks-ecommerce-store.vercel.app"});
     return res.redirect(
-      "https://kicks-ecommerce-store.vercel.app?valid=" + string
+      `${environment.CLIENT_URL}?valid=` + string
     );
   }
 );

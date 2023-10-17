@@ -2,17 +2,17 @@ require('dotenv').config()
 const express = require("express");
 const mongoose = require("mongoose");
 const PORT = process.env.PORT || 5000;
-const mongo = process.env.DB;
 const cors = require("cors");
 const passport = require('passport');
 const errorHandler = require('./middleware/errorHandler');
+const environment = require('./utils/environment');
 
-const app  = express();
+const app = express();
 app.use(cors())
 
 // Done: Set config Depending upon the Environment
 const config = {
-    dburl: `${mongo}`
+    dburl: `${environment.DB}`
 }
 try {
     mongoose.connect(config.dburl, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -34,6 +34,8 @@ db.on('close', function () {
 db.on('disconnected', function () {
     console.log('Mongoose default connection ended.');
 });
+
+app.use("/api/v1/payment",require("./routes/v1/stripeWebhook"))
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -1,6 +1,7 @@
 const express = require("express");
 const { createToken } = require("../../../utils/jwt")
 const passport = require("passport");
+const environment = require("../../../utils/environment");
 const router = express.Router();
 
 router.get(
@@ -18,9 +19,9 @@ router.get(
   }),
   (req, res) => {
     if(req.user.status === 400){
-        return res.redirect("https://kicks-ecommerce-store.vercel.app?facebook=false");
+        return res.redirect(`${environment.CLIENT_URL}?facebook=false`);
     }else if(req.user.status === 500){
-        return res.redirect("https://kicks-ecommerce-store.vercel.app?auth=false");
+        return res.redirect(`${environment.CLIENT_URL}?auth=false`);
     }
     const payload = {
       id: req.user._id,
@@ -28,7 +29,7 @@ router.get(
     };
     const token = createToken(payload)
     var string = encodeURIComponent(`${token}`);
-    return res.redirect("https://kicks-ecommerce-store.vercel.app?valid=" + string);
+    return res.redirect(`${environment.CLIENT_URL}?valid=` + string);
   }
 );
 

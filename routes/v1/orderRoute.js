@@ -6,6 +6,7 @@ const verifyToken = require("../../middleware/verifyToken");
 router.use(verifyToken);
 
 router.post("/",orderController.addOrder);
+router.post("/checkout/:orderId",orderController.orderCheckout)
 router.put("/paymentStatus/:id",orderController.updateOrderPaymentStatus);
 router.put("/status/:id",orderController.updateOrderStatus);
 router.get("/",orderController.getOrders);

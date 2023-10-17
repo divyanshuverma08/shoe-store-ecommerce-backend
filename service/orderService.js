@@ -2,6 +2,8 @@ const BaseError = require("../config/BaseError");
 const httpStatusCodes = require("../config/http");
 const productModel = require("../model/productModel");
 const orderModel = require("../model/orderModel");
+const environment = require("../utils/environment");
+const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY);
 
 module.exports.addOrder = async (data) => {
     const totalPrices = await Promise.all(data.items.map(async (orderItem)=>{
@@ -69,4 +71,33 @@ module.exports.getOrdersByUser = async (id) => {
 
     let data = await orderModel.find(filter).populate("items.product","model price").sort({createdAt: -1});
     return data;
+}
+
+module.exports.orderCheckout = async (id) => {
+
+    let data = await orderModel.findById(id).populate("items.product","model price");
+
+    const session = await stripe.checkout.sessions.create({
+        line_items: data.items.map(item => {
+            return {
+              price_data: {
+                currency: "INR",
+                product_data: {
+                  name: item.product.model,
+                },
+                unit_amount: item.buyingPrice * 100,
+              },
+              quantity: item.quantity,
+            }
+          }),
+        metadata: {
+            order_id: id
+        },
+        payment_method_types: ["card"],
+        mode: 'payment',
+        success_url: `${environment.CLIENT_URL}/profile?payment=true`,
+        cancel_url: `${environment.CLIENT_URL}/profile?payment=false`,
+      });
+    
+    return { url: session.url };
 }
