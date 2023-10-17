@@ -6,6 +6,7 @@ router.use(apiKeyVerification);
 router.use("/auth",require("./auth"))
 router.use("/category",require("./categoryRoute"))
 router.use("/products",require("./productRoute"));
+router.use("/orders",require("./orderRoute"));
 
 router.get('/', (req,res)=>{
     console.log("Called");
