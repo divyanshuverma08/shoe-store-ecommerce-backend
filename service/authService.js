@@ -14,7 +14,12 @@ module.exports.register = async function(data){
 
     let user = new userModel(data);
     await user.save();
-    return {email: user.email,firstName: user.firstName, lastName: user.lastName};
+    
+    const payload = {id: user._id,email: user.email};
+
+    const token = createToken(payload)
+
+    return {email: user.email,firstName: user.firstName, lastName: user.lastName,token};
 }
 
 module.exports.login = async function(data){
@@ -30,9 +35,9 @@ module.exports.login = async function(data){
 
     if(!isMatch) throw new BaseError("Incorrect Password",httpStatusCodes.unauthorized)
 
-    const payload = {id: user._id,email: user.email,firstName: user.firstName, lastName: user.lastName};
+    const payload = {id: user._id,email: user.email};
 
     const token = createToken(payload)
 
-    return token;
+    return {email: user.email,firstName: user.firstName, lastName: user.lastName,token};
 }

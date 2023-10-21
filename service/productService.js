@@ -23,7 +23,7 @@ module.exports.addProduct = async (data) => {
 };
 
 module.exports.getFeatured = async () => {
-  let data = await productModel.find().sort({ createdAt: -1 }).limit(4);
+  let data = await productModel.find().populate("category").sort({ createdAt: -1 }).limit(4);
   return data;
 };
 
@@ -87,6 +87,9 @@ module.exports.getAllProductsWithFiltersAndPagination = async (query, sort,page,
     },
     {
       $match: query,
+    },
+    {
+      $unwind: "$category"
     }
   ];
 
@@ -133,10 +136,6 @@ module.exports.getAllProductsWithFiltersAndPagination = async (query, sort,page,
   };
 
   pipeline.push(projectionStage);
-
-  if(process.env.NODE_ENV === "development"){
-    console.log("pipline for pagination",pipeline);
-  }
 
   let [dataResult,totalItemsResult] = await Promise.all([
     productModel.aggregate(pipeline),

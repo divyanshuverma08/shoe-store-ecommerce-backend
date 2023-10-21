@@ -23,11 +23,11 @@ module.exports.register = tryCatch(async function (req, res) {
     );
   }
 
-  const passwordRegex = new RegExp("^(?=.*[A-Z])(?=.*[!@#$%^&*]).{7,}$");
+  const passwordRegex = new RegExp("^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{6,}$");
 
   if (!passwordRegex.test(password)) {
     throw new BaseError(
-      "Invalid password format (Valid values for at least one capital letter, !, @, #, $, %, ^, &, or * one symbol)",
+      "Invalid password format (Minimum 6 letters and least one capital letter and one lowercase letter, !, @, #, $, %, ^, &, or * one symbol)",
       httpStatusCodes.badRequest
     );
   }
@@ -57,8 +57,8 @@ module.exports.login = tryCatch(async function (req, res) {
     );
   }
 
-  let token = await authService.login(data);
+  let user = await authService.login(data);
 
-  return res.status(httpStatusCodes.ok).send({ success: true, message: "Login successfull", token });
+  return res.status(httpStatusCodes.ok).send({ success: true, message: "Login successfull", user });
 
 });

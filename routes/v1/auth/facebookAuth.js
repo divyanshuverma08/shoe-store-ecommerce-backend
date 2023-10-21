@@ -28,8 +28,15 @@ router.get(
       email: req.user.email,
     };
     const token = createToken(payload)
-    var string = encodeURIComponent(`${token}`);
-    return res.redirect(`${environment.CLIENT_URL}?valid=` + string);
+    const params = new URLSearchParams({
+      valid: token,
+      email: req.user.email,
+      firstName: req.user.firstName,
+      lastName: req.user.lastName
+    })
+    return res.redirect(
+      `${environment.CLIENT_URL}?` + params
+    );
   }
 );
 

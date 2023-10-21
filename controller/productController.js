@@ -120,6 +120,10 @@ module.exports.getAllProductsWithFiltersAndPagination = tryCatch(async (req,res)
         queryObject.price = { $gte: parseInt(price.gte), $lte: parseInt(price.lte) };
     }
 
+    if(process.env.NODE_ENV === "development"){
+        console.log(queryObject,sort,page,pageSize);
+      }
+
     let response = await productService.getAllProductsWithFiltersAndPagination(queryObject,sort,page,pageSize);
 
     return res
