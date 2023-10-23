@@ -19,7 +19,7 @@ module.exports.register = async function(data){
 
     const token = createToken(payload)
 
-    return {email: user.email,firstName: user.firstName, lastName: user.lastName,token};
+    return {id: user._id,email: user.email,firstName: user.firstName, lastName: user.lastName,token};
 }
 
 module.exports.login = async function(data){
@@ -39,5 +39,5 @@ module.exports.login = async function(data){
 
     const token = createToken(payload)
 
-    return {email: user.email,firstName: user.firstName, lastName: user.lastName,token};
+    return {id: user._id,email: user.email,firstName: user.firstName, lastName: user.lastName,token};
 }

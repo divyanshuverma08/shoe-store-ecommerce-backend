@@ -5,6 +5,7 @@ router.use("/auth",require("./auth"));
 
 router.use(apiKeyVerification);
 
+router.use("/users",require("./userRoute"));
 router.use("/category",require("./categoryRoute"));
 router.use("/products",require("./productRoute"));
 router.use("/orders",require("./orderRoute"));
