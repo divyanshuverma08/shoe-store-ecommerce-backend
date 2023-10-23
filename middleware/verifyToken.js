@@ -20,9 +20,9 @@ const verifyToken = (req,res,next) => {
         next();
       } catch(err) {
         if(err instanceof TokenExpiredError){
-            throw new BaseError("Token expired",500);
+            throw new BaseError("Token expired",httpStatusCodes.unauthorized);
         }else if(err instanceof JsonWebTokenError){
-            throw new BaseError("Invalid token",500);
+            throw new BaseError("Invalid token",httpStatusCodes.unauthorized);
         }else{
             throw err;
         }

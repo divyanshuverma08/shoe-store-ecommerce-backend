@@ -10,7 +10,6 @@ router.use("/products",require("./productRoute"));
 router.use("/orders",require("./orderRoute"));
 
 router.get('/', (req,res)=>{
-    console.log("Called");
     res.send("Buy shoes at KICKS");
 })
 

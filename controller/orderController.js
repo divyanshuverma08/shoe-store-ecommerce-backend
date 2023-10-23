@@ -5,7 +5,6 @@ const { tryCatch } = require("../utils/tryCatch");
 
 module.exports.addOrder = tryCatch(async (req, res) => {
   let data = req.body;
-  let user = data.user;
   let items = data.items;
   let email = data.email;
   let firstName = data.firstName;
@@ -19,7 +18,6 @@ module.exports.addOrder = tryCatch(async (req, res) => {
   let deliveryType = data.deliveryType;
 
   if (
-    !user ||
     !items ||
     !email ||
     !firstName ||
@@ -33,6 +31,10 @@ module.exports.addOrder = tryCatch(async (req, res) => {
     !deliveryType
   ) {
     throw new BaseError("All fields are mandatory", httpStatusCodes.badRequest);
+  }
+  
+  if(req.user){
+    data.user = req.user.id;
   }
 
   let response = await orderService.addOrder(data);

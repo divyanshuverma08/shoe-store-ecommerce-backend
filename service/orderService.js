@@ -2,10 +2,29 @@ const BaseError = require("../config/BaseError");
 const httpStatusCodes = require("../config/http");
 const productModel = require("../model/productModel");
 const orderModel = require("../model/orderModel");
+const userModel = require("../model/userModel")
 const environment = require("../utils/environment");
 const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY);
 
 module.exports.addOrder = async (data) => {
+
+    let user;
+
+    if(!data.user){
+        user = await userModel.findOne({email: data.email});
+
+        if(!user){
+            user = new userModel({
+                email: data.email,
+                firstName: data.firstName,
+                lastName: data.lastName
+            });
+            await user.save();
+        }
+
+        data.user = user._id;
+    }
+
     const totalPrices = await Promise.all(data.items.map(async (orderItem)=>{
         const product = await productModel.findById(orderItem.product).select("model price sizes -_id");
         const size = product.sizes.find(({size})=> orderItem.size === size);
@@ -77,8 +96,18 @@ module.exports.orderCheckout = async (id) => {
 
     let data = await orderModel.findById(id).populate("items.product","model price");
 
+    const items = data.items;
+
+    if(data.deliveryType === "Fast"){
+        items.push({
+            product:{model: "Fast Delivery"},
+            buyingPrice: 100,
+            quantity: 1
+        });
+    }
+
     const session = await stripe.checkout.sessions.create({
-        line_items: data.items.map(item => {
+        line_items: items.map(item => {
             return {
               price_data: {
                 currency: "INR",
