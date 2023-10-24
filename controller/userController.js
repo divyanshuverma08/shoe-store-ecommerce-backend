@@ -64,6 +64,15 @@ module.exports.updatePassword = tryCatch(async (req,res) => {
         throw new BaseError("Current and New password is mandatory", httpStatusCodes.badRequest);
     }
 
+    const passwordRegex = new RegExp("^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{6,}$");
+
+    if (!passwordRegex.test(newPassword)) {
+      throw new BaseError(
+        "Invalid password format (Minimum 6 letters and least one capital letter and one lowercase letter, !, @, #, $, %, ^, &, or * one symbol)",
+        httpStatusCodes.badRequest
+      );
+    }
+
     const id = req.user.id;
 
     let response = await userService.updatePassword(id,data);
@@ -80,6 +89,15 @@ module.exports.setPassword = tryCatch(async (req,res) => {
 
     if(!password){
         throw new BaseError("Password is mandatory", httpStatusCodes.badRequest);
+    }
+
+    const passwordRegex = new RegExp("^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{6,}$");
+
+    if (!passwordRegex.test(password)) {
+      throw new BaseError(
+        "Invalid password format (Minimum 6 letters and least one capital letter and one lowercase letter, !, @, #, $, %, ^, &, or * one symbol)",
+        httpStatusCodes.badRequest
+      );
     }
 
     const id = req.user.id;
