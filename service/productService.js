@@ -162,3 +162,26 @@ module.exports.getAllProductsWithFiltersAndPagination = async (query, sort,page,
     }
   }
 };
+
+module.exports.getSearchProducts = async (key) => {
+
+  let data = await productModel.aggregate([{
+    $lookup: {
+      from: "categories",
+      localField: "category",
+      foreignField: "_id",
+      as: "category",
+    },
+  },
+  {
+    $match: {
+      $or:[
+        {model: {$regex: key,$options: "i"}},
+        {"category.name": {$regex: key,$options: "i"}}
+      ]
+    },
+  }
+]);
+
+  return data;
+};

@@ -131,3 +131,18 @@ module.exports.getAllProductsWithFiltersAndPagination = tryCatch(async (req,res)
     .send({ success: true, message: "Categories", data: response.data, metadata: response.metadata });
     
 });
+
+module.exports.getSearchProducts = tryCatch(async (req,res) => {
+    const key = req.params.key;
+
+    if(!key){
+        throw new BaseError("key cannot be empty", httpStatusCodes.badRequest);
+    }
+
+    let response = await productService.getSearchProducts(key);
+
+    return res
+    .status(httpStatusCodes.ok)
+    .send({ success: true, message: "Featured Products", data: response });
+    
+});
