@@ -12,6 +12,7 @@ router.use(verifyToken);
 router.put("/paymentStatus/:id",orderController.updateOrderPaymentStatus);
 router.put("/status/:id",orderController.updateOrderStatus);
 router.get("/",orderController.getOrders);
+router.get("/:id",orderController.getOrderById);
 router.get("/user/:id",orderController.getOrdersByUser);
 
 module.exports = router;

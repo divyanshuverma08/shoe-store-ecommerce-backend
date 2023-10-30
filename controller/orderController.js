@@ -105,8 +105,10 @@ module.exports.updateOrderStatus = tryCatch(async (req,res) => {
 });
 
 module.exports.getOrders = tryCatch(async (req,res) => {
+    let page = parseInt(req.query.page) || 1;
+    let pageSize = parseInt(req.query.pageSize) || 9;
 
-    let response = await orderService.getOrders();
+    let response = await orderService.getOrders(page,pageSize);
 
     return res
     .status(httpStatusCodes.ok)
@@ -146,3 +148,18 @@ module.exports.orderCheckout = tryCatch(async (req, res) => {
         data: response,
       });
   });
+
+module.exports.getOrderById = tryCatch(async (req,res) => {
+    const id = req.params.id;
+
+    if(!id){
+        throw new BaseError("Id not provided in url", httpStatusCodes.badRequest);
+    }
+
+    let response = await orderService.getOrderById(id);
+
+    return res
+    .status(httpStatusCodes.ok)
+    .send({ success: true, message: "Order", data: response });
+    
+});

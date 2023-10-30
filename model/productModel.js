@@ -43,6 +43,10 @@ const productSchema = new Schema({
     newRelease: {
         type: Boolean,
         default: false
+    },
+    totalSold: {
+        type: Number,
+        default: 0
     }
 },{timestamps: true});
 

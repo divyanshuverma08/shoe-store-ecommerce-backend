@@ -63,7 +63,7 @@ module.exports.updateOrderPaymentStatus = async (id,data) => {
             const product = await productModel.findById(orderItem.product).select("model price sizes -_id");
             const size = product.sizes.find(({size})=> orderItem.size === size);
     
-            await productModel.updateOne({_id:orderItem.product,'sizes.size' : orderItem.size},{$set:{'sizes.$.quantity': size.quantity - orderItem.quantity}})
+            await productModel.updateOne({_id:orderItem.product,'sizes.size' : orderItem.size},{$set:{'sizes.$.quantity': size.quantity - orderItem.quantity},$inc:{totalSold: orderItem.quantity}})
         }),);
     }
 
@@ -79,10 +79,29 @@ module.exports.updateOrderStatus = async (id,data) => {
     return order;
 }
 
-module.exports.getOrders = async () => {
+module.exports.getOrders = async (page,pageSize) => {
+    let skip = (page - 1) * pageSize;
 
-    let data = await orderModel.find().populate("items.product","model price").sort({createdAt: -1});
-    return data;
+
+    let data = await orderModel.find().populate("items.product","model price").sort({createdAt: -1}).limit(pageSize).skip(skip);
+    let totalItems = await orderModel.find().count();
+
+      //calculate total number of pages, to determine next page
+    const totalPages = Math.ceil(totalItems / pageSize);
+    const hasNextPage = page < totalPages;
+    const hasPreviousPage = page > 1;
+
+    return {
+    data,
+    metadata: {
+      totalItems,
+      totalPages,
+      currentPage: page,
+      pageSize,
+      hasNextPage,
+      hasPreviousPage
+    }
+  }
 }
 
 module.exports.getOrdersByUser = async (id) => {
@@ -129,4 +148,10 @@ module.exports.orderCheckout = async (id) => {
       });
     
     return { url: session.url };
+}
+
+module.exports.getOrderById = async (id) => {
+
+    let data = await orderModel.findById(id).populate("items.product","model price");
+    return data;
 }
