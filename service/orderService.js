@@ -152,6 +152,6 @@ module.exports.orderCheckout = async (id) => {
 
 module.exports.getOrderById = async (id) => {
 
-    let data = await orderModel.findById(id).populate("items.product","model price");
+    let data = await orderModel.findById(id).populate("items.product","model price images");
     return data;
 }
