@@ -1,4 +1,4 @@
-const BaseError = require("../config/BaseError");
+const BaseError = require("../config/baseError");
 const httpStatusCodes = require("../config/http");
 const productService = require("../service/productService");
 const { tryCatch } = require("../utils/tryCatch");

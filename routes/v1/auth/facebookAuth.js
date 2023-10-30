@@ -5,7 +5,7 @@ const environment = require("../../../utils/environment");
 const router = express.Router();
 const axios = require("axios");
 const { tryCatch } = require("../../../utils/tryCatch");
-const BaseError = require("../../../config/BaseError");
+const BaseError = require("../../../config/baseError");
 const httpStatusCodes = require("../../../config/http");
 const userModel = require("../../../model/userModel");
 

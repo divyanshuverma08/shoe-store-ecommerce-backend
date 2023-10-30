@@ -1,5 +1,5 @@
 const authService = require("../service/authService");
-const BaseError = require("../config/BaseError");
+const BaseError = require("../config/baseError");
 const httpStatusCodes = require("../config/http");
 const { tryCatch } = require("../utils/tryCatch");
 

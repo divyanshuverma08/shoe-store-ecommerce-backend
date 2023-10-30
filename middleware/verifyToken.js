@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const TokenExpiredError = jwt.TokenExpiredError;
 const JsonWebTokenError = jwt.JsonWebTokenError;
-const BaseError = require("../config/BaseError");
+const BaseError = require("../config/baseError");
 const httpStatusCodes = require("../config/http");
 const environment = require("../utils/environment");
 
